@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class RoomMessage {
-    String roomId;
-    Message message;
+    private String roomId;
+    private Message message;
 }

@@ -1,11 +1,12 @@
 package com.multiplayergameserver.app.models;
 
+import com.multiplayergameserver.app.game.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AppUserDetails implements UserDetails {
@@ -13,7 +14,7 @@ public class AppUserDetails implements UserDetails {
     private String userName;
     private String password;
     private boolean active;
-    private List<GrantedAuthority> authorities;
+    private Set<GrantedAuthority> authorities;
 
     public AppUserDetails(User user) {
         this.userName = user.getUsername();
@@ -21,7 +22,7 @@ public class AppUserDetails implements UserDetails {
         this.active = user.isActive();
         this.authorities = user.getRoles().stream()
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

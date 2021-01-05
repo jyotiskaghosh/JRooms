@@ -30,7 +30,7 @@ public abstract class Game {
             end();
     }
 
-    public void start() {}
+    public void start() { throw new UnsupportedOperationException(); }
     public void process(String username, Action action) {}
-    public void end() {}
+    public void end() { throw new UnsupportedOperationException(); }
 }

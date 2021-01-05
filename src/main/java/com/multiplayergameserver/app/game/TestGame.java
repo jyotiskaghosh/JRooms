@@ -7,7 +7,7 @@ import com.multiplayergameserver.app.models.rooms.RoomSocket;
 
 public class TestGame extends Game {
 
-    public static final int MAX_PLAYERS = 2;
+    private static final int MAX_PLAYERS = 2;
 
     public TestGame(RoomSocket roomSocket) {
         super(roomSocket);

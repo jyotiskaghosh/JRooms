@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class ChatMessage implements Message {
 
-    private String sender;
-    private String body;
+    private final String sender;
+    private final String body;
 
     public ChatMessage(String sender, String body, String roomId) {
         this.sender = sender;

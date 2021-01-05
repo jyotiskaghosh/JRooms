@@ -1,6 +1,6 @@
 package com.multiplayergameserver.app.controllers;
 
-import com.multiplayergameserver.app.models.User;
+import com.multiplayergameserver.app.game.models.User;
 import com.multiplayergameserver.app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

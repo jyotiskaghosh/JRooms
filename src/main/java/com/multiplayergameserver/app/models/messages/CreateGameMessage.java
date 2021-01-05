@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class CreateGameMessage {
-    String title;
-    boolean active;
+    private String title;
+    private boolean active;
 }

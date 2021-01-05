@@ -1,7 +1,7 @@
 package com.multiplayergameserver.app.services;
 
 import com.multiplayergameserver.app.repositories.UserRepository;
-import com.multiplayergameserver.app.models.User;
+import com.multiplayergameserver.app.game.models.User;
 import com.multiplayergameserver.app.models.AppUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
