@@ -1,7 +1,7 @@
 package com.multiplayergameserver.app.models.game;
 
-import com.multiplayergameserver.app.models.rooms.RoomSocket;
+import com.multiplayergameserver.app.models.rooms.GameRoom;
 
 public interface GameFactory {
-    Game createGame(RoomSocket roomSocket);
+    Game createGame(GameRoom gameRoom, PlayerFactory playerFactory);
 }

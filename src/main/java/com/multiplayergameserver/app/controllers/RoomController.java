@@ -1,17 +1,16 @@
 package com.multiplayergameserver.app.controllers;
 
+import com.multiplayergameserver.app.models.game.GameFactory;
+import com.multiplayergameserver.app.models.game.PlayerFactory;
 import com.multiplayergameserver.app.models.messages.CreateGameMessage;
-import com.multiplayergameserver.app.models.messages.RoomMessage;
+import com.multiplayergameserver.app.models.messages.Message;
 import com.multiplayergameserver.app.models.rooms.GameRoom;
 import com.multiplayergameserver.app.models.rooms.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.*;
@@ -23,74 +22,108 @@ public class RoomController {
     @Autowired
     private SimpMessagingTemplate template;
 
-    private Map<String, GameRoom> gameRooms = new HashMap<>();
+    @Autowired
+    private GameFactory gameFactory;
 
-    @Secured("user")
-    @PostMapping("/new/game/room")
+    @Autowired
+    protected PlayerFactory playerFactory;
+
+    private Map<String, Room> rooms = new HashMap<>();
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("/new/game")
     public String newGame(@RequestBody CreateGameMessage message, Principal principal) {
         String roomId = UUID.randomUUID().toString();
-        gameRooms.put(roomId,
+        rooms.put(roomId,
             new GameRoom(
                 roomId,
                 message.getTitle(),
                 message.isActive(),
+                principal.getName(),
                 template,
-                principal.getName()
+                gameFactory,
+                playerFactory
             ));
         return roomId;
     }
 
     @GetMapping("/rooms/games")
     public List<String> getGames() {
-        return gameRooms.values().stream().map(Room::getRoomId).collect(Collectors.toList());
+        return rooms
+                .values()
+                .stream()
+                .filter(room -> room instanceof GameRoom)
+                .map(Room::getRoomId)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/rooms/{roomId}/users")
-    public Set<String> getUsers(@RequestBody String roomId) {
-        return gameRooms.get(roomId).getUsers();
+    public Set<String> getUsers(@PathVariable String roomId) {
+        return rooms.get(roomId).getUsers();
     }
 
-    @Secured("user")
+    @GetMapping("/rooms/{roomId}/players")
+    public List<String> getPlayers(@PathVariable String roomId) {
+        if (rooms.get(roomId) instanceof GameRoom)
+            return ((GameRoom) rooms.get(roomId)).getPlayers();
+        return null;
+    }
+
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/rooms/{roomId}/add/user")
-    public void addUser(@RequestBody String roomId, Principal principal) {
-        gameRooms.get(roomId).addUser(principal.getName());
+    public void addUser(@PathVariable String roomId, Principal principal) {
+        rooms.get(roomId).addUser(principal.getName());
     }
 
-    @Secured("user")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/rooms/{roomId}/remove/user")
-    public void removeUser(@RequestBody String roomId, Principal principal) {
-        gameRooms.get(roomId).removeUser(principal.getName());
+    public void removeUser(@PathVariable String roomId, Principal principal) {
+        rooms.get(roomId).removeUser(principal.getName());
     }
 
-    @Secured("user")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/rooms/{roomId}/add/player")
-    public void addPlayer(@RequestBody String roomId, Principal principal) {
-        gameRooms.get(roomId).addPlayer(principal.getName());
+    public void addPlayer(@PathVariable String roomId, Principal principal) {
+        if (rooms.get(roomId) instanceof GameRoom) {
+            GameRoom gameRoom = (GameRoom) rooms.get(roomId);
+            gameRoom.addPlayer(principal.getName());
+        }
     }
 
-    @Secured("user")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/rooms/{roomId}/remove/player")
-    public void removePlayer(@RequestBody String roomId, Principal principal) {
-        gameRooms.get(roomId).removePlayer(principal.getName());
+    public void removePlayer(@PathVariable String roomId, Principal principal) {
+        if (rooms.get(roomId) instanceof GameRoom) {
+            GameRoom room = (GameRoom) rooms.get(roomId);
+            room.removePlayer(principal.getName());
+        }
     }
 
-    @Secured("user")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/rooms/{roomId}/start")
-    public void start(@RequestBody String roomId) {
-        gameRooms.get(roomId).start();
+    public void start(@PathVariable String roomId, Principal principal) {
+        if (rooms.get(roomId) instanceof GameRoom) {
+            GameRoom gameRoom = (GameRoom) rooms.get(roomId);
+            if (gameRoom.getPlayers().stream().anyMatch(player -> player.equals(principal.getName())))
+                gameRoom.start();
+        }
     }
 
-    @Secured("user")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/rooms/{roomId}/end")
-    public void end(@RequestBody String roomId) {
-        gameRooms.get(roomId).end();
-        gameRooms.remove(roomId);
+    public void end(@PathVariable String roomId, Principal principal) {
+        if (rooms.get(roomId) instanceof GameRoom) {
+            GameRoom gameRoom = (GameRoom) rooms.get(roomId);
+            if (gameRoom.getPlayers().stream().anyMatch(player -> player.equals(principal.getName()))) {
+                gameRoom.end();
+                rooms.remove(roomId);
+            }
+        }
     }
 
-    @Secured("user")
+    @PreAuthorize("hasAuthority('USER')")
     @MessageMapping("/rooms/{roomId}/message")
-    public void process(@RequestBody RoomMessage roomMessage, Principal principal) {
-        gameRooms.get(roomMessage.getRoomId()).process(principal.getName(), roomMessage.getMessage());
+    public void process(@PathVariable String roomId, @RequestBody Message message, Principal principal) {
+        rooms.get(roomId).process(principal.getName(), message);
     }
-
 }

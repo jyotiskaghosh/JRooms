@@ -2,30 +2,30 @@ package com.multiplayergameserver.app.models.rooms;
 
 import com.multiplayergameserver.app.models.game.Game;
 import com.multiplayergameserver.app.models.game.GameFactory;
+import com.multiplayergameserver.app.models.game.PlayerFactory;
 import com.multiplayergameserver.app.models.messages.Action;
 import com.multiplayergameserver.app.models.messages.Message;
 
 import com.multiplayergameserver.app.models.messages.WarnMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.util.List;
 
 public class GameRoom extends Room {
 
     private String host;
     private Game game;
 
-    @Autowired
-    private GameFactory gameFactory;
-
     public GameRoom(String roomId,
                     String title,
                     boolean active,
+                    String host,
                     SimpMessagingTemplate template,
-                    String host) {
+                    GameFactory gameFactory,
+                    PlayerFactory playerFactory) {
         super(roomId, title, active, template);
         this.host = host;
-        this.game = gameFactory.createGame(this.roomSocket);
+        this.game = gameFactory.createGame(this, playerFactory);
     }
 
     public String getHost() {
@@ -42,6 +42,10 @@ public class GameRoom extends Room {
         game.removePlayer(username);
     }
 
+    public List<String> getPlayers() {
+        return game.getPlayers();
+    }
+
     public void start() {
         game.start();
     }
@@ -50,6 +54,7 @@ public class GameRoom extends Room {
         game.end();
     }
 
+    @Override
     public void process(String username, Message message) {
 
         if (message instanceof Action)

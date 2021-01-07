@@ -1,22 +1,19 @@
 package com.multiplayergameserver.app.models.game;
 
 import com.multiplayergameserver.app.models.messages.Action;
-import com.multiplayergameserver.app.models.rooms.RoomSocket;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.multiplayergameserver.app.models.rooms.GameRoom;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Game {
 
-    protected final RoomSocket roomSocket;
+    protected final GameRoom gameRoom;
     protected final Map<String, Player> players;
+    protected final PlayerFactory playerFactory;
 
-    @Autowired
-    protected PlayerFactory playerFactory;
-
-    public Game(RoomSocket roomSocket) {
-        this.roomSocket = roomSocket;
+    public Game(GameRoom gameRoom, PlayerFactory playerFactory) {
+        this.gameRoom = gameRoom;
+        this.playerFactory = playerFactory;
         this.players = new HashMap<>();
     }
 
@@ -30,7 +27,11 @@ public abstract class Game {
             end();
     }
 
+    public List<String> getPlayers() {
+        return new ArrayList<>(players.keySet());
+    }
+
     public void start() { throw new UnsupportedOperationException(); }
-    public void process(String username, Action action) {}
+    public void process(String username, Action action) { throw new UnsupportedOperationException(); }
     public void end() { throw new UnsupportedOperationException(); }
 }
