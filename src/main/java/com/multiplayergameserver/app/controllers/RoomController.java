@@ -1,6 +1,7 @@
 package com.multiplayergameserver.app.controllers;
 
 import com.multiplayergameserver.app.models.game.GameFactory;
+import com.multiplayergameserver.app.models.game.Player;
 import com.multiplayergameserver.app.models.game.PlayerFactory;
 import com.multiplayergameserver.app.models.messages.CreateGameMessage;
 import com.multiplayergameserver.app.models.messages.Message;
@@ -26,9 +27,9 @@ public class RoomController {
     private GameFactory gameFactory;
 
     @Autowired
-    protected PlayerFactory playerFactory;
+    private PlayerFactory playerFactory;
 
-    private Map<String, Room> rooms = new HashMap<>();
+    private final Map<String, Room> rooms = new HashMap<>();
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/new/game")
@@ -48,13 +49,14 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/games")
-    public List<String> getGames() {
-        return rooms
+    public Map.Entry<String, List<GameRoom>> getGames() {
+        return Map.entry("games",
+                rooms
                 .values()
                 .stream()
                 .filter(room -> room instanceof GameRoom)
-                .map(Room::getRoomId)
-                .collect(Collectors.toList());
+                .map(room -> (GameRoom) room)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/rooms/{roomId}/users")
@@ -63,9 +65,9 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{roomId}/players")
-    public List<String> getPlayers(@PathVariable String roomId) {
+    public Set<Player> getPlayers(@PathVariable String roomId) {
         if (rooms.get(roomId) instanceof GameRoom)
-            return ((GameRoom) rooms.get(roomId)).getPlayers();
+            return ((GameRoom) rooms.get(roomId)).getGame().getPlayers();
         return null;
     }
 
@@ -104,7 +106,11 @@ public class RoomController {
     public void start(@PathVariable String roomId, Principal principal) {
         if (rooms.get(roomId) instanceof GameRoom) {
             GameRoom gameRoom = (GameRoom) rooms.get(roomId);
-            if (gameRoom.getPlayers().stream().anyMatch(player -> player.equals(principal.getName())))
+            if (gameRoom
+                    .getGame()
+                    .getPlayers()
+                    .stream()
+                    .anyMatch(player -> player.getUsername().equals(principal.getName())))
                 gameRoom.start();
         }
     }
@@ -114,7 +120,11 @@ public class RoomController {
     public void end(@PathVariable String roomId, Principal principal) {
         if (rooms.get(roomId) instanceof GameRoom) {
             GameRoom gameRoom = (GameRoom) rooms.get(roomId);
-            if (gameRoom.getPlayers().stream().anyMatch(player -> player.equals(principal.getName()))) {
+            if (gameRoom
+                    .getGame()
+                    .getPlayers()
+                    .stream()
+                    .anyMatch(player -> player.getUsername().equals(principal.getName()))) {
                 gameRoom.end();
                 rooms.remove(roomId);
             }

@@ -1,5 +1,6 @@
 package com.multiplayergameserver.app.models.rooms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.multiplayergameserver.app.models.messages.Message;
 import lombok.Getter;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -9,11 +10,12 @@ import java.util.Set;
 
 @Getter
 public abstract class Room {
-    protected final String roomId;
-    protected final String title;
-    protected final Set<String> users;
-    protected boolean active;
-    protected final SimpMessagingTemplate template;
+    private final String roomId;
+    private final String title;
+    private final Set<String> users;
+    private boolean active;
+    @JsonIgnore
+    private final SimpMessagingTemplate template;
 
     Room(String roomId, String title, boolean active, SimpMessagingTemplate template) {
         this.roomId = roomId;

@@ -15,11 +15,11 @@ public class TestGame extends Game {
 
     @Override
     public void addPlayer(String username) {
-        if (players.size() >= MAX_PLAYERS)
+        if (super.getPlayers().size() >= MAX_PLAYERS)
         {
-            super.gameRoom.sendUser(username, new WarnMessage("game at maximum player capacity"));
+            super.getGameRoom().sendUser(username, new WarnMessage("game at maximum player capacity"));
             return;
         }
-        players.put(username, playerFactory.createPlayer(username));
+        super.getPlayers().add(super.getPlayerFactory().createPlayer(username));
     }
 }

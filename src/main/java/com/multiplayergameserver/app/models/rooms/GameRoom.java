@@ -7,14 +7,14 @@ import com.multiplayergameserver.app.models.messages.Action;
 import com.multiplayergameserver.app.models.messages.Message;
 
 import com.multiplayergameserver.app.models.messages.WarnMessage;
+import lombok.Getter;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.List;
-
+@Getter
 public class GameRoom extends Room {
 
-    private String host;
-    private Game game;
+    private final String host;
+    private final Game game;
 
     public GameRoom(String roomId,
                     String title,
@@ -28,10 +28,6 @@ public class GameRoom extends Room {
         this.game = gameFactory.createGame(this, playerFactory);
     }
 
-    public String getHost() {
-        return host;
-    }
-
     public void addPlayer(String username) {
         addUser(username);
         game.addPlayer(username);
@@ -40,10 +36,6 @@ public class GameRoom extends Room {
     public void removePlayer(String username) {
         removeUser(username);
         game.removePlayer(username);
-    }
-
-    public List<String> getPlayers() {
-        return game.getPlayers();
     }
 
     public void start() {

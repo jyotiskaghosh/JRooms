@@ -1,9 +1,9 @@
 package com.multiplayergameserver.app.models.messages;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class CreateGameMessage {
-    private String title;
-    private boolean active;
+    private final String title;
+    private final boolean active;
 }

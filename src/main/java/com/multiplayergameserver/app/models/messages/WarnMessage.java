@@ -1,16 +1,11 @@
 package com.multiplayergameserver.app.models.messages;
 
+import lombok.Data;
+
+@Data
 public class WarnMessage implements Message {
 
-    private String body;
-
-    public WarnMessage(String body) {
-        this.body = body;
-    }
-
-    public String getBody() {
-        return body;
-    }
+    private final String body;
 
     public String getType() {
         return "warning";
