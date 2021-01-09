@@ -20,6 +20,6 @@ public class TestGame extends Game {
             super.getGameRoom().sendUser(username, new WarnMessage("game at maximum player capacity"));
             return;
         }
-        super.getPlayers().add(super.getPlayerFactory().createPlayer(username));
+        super.getPlayers().put(username, super.getPlayerFactory().createPlayer(username));
     }
 }

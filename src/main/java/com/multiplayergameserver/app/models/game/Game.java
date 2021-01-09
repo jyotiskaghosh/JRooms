@@ -15,25 +15,22 @@ public abstract class Game {
     @JsonIgnore
     private final GameRoom gameRoom;
     private boolean started;
-    private final Set<Player> players;
+    private final Map<String, Player> players;
     @JsonIgnore
     private final PlayerFactory playerFactory;
 
     public Game(GameRoom gameRoom, PlayerFactory playerFactory) {
         this.gameRoom = gameRoom;
         this.playerFactory = playerFactory;
-        this.players = new HashSet<>();
+        this.players = new HashMap<>();
     }
 
     public void addPlayer(String username) {
-        players.add(playerFactory.createPlayer(username));
+        players.put(username, playerFactory.createPlayer(username));
     }
 
     public void removePlayer(String username) {
-        players.forEach(player -> {
-            if (username.equals(player.getUsername()))
-                players.remove(player);
-        });
+        players.remove(username);
         if (players.size() == 0)
             end();
     }

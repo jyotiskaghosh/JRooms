@@ -65,7 +65,7 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{roomId}/players")
-    public Set<Player> getPlayers(@PathVariable String roomId) {
+    public Map<String, Player> getPlayers(@PathVariable String roomId) {
         if (rooms.get(roomId) instanceof GameRoom)
             return ((GameRoom) rooms.get(roomId)).getGame().getPlayers();
         return null;
@@ -109,8 +109,7 @@ public class RoomController {
             if (gameRoom
                     .getGame()
                     .getPlayers()
-                    .stream()
-                    .anyMatch(player -> player.getUsername().equals(principal.getName())))
+                    .containsKey(principal.getName()))
                 gameRoom.start();
         }
     }
@@ -123,8 +122,7 @@ public class RoomController {
             if (gameRoom
                     .getGame()
                     .getPlayers()
-                    .stream()
-                    .anyMatch(player -> player.getUsername().equals(principal.getName()))) {
+                    .containsKey(principal.getName())) {
                 gameRoom.end();
                 rooms.remove(roomId);
             }
