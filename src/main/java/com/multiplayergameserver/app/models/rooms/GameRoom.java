@@ -28,16 +28,6 @@ public class GameRoom extends Room {
         this.game = gameFactory.createGame(this, playerFactory);
     }
 
-    public void addPlayer(String username) {
-        addUser(username);
-        game.addPlayer(username);
-    }
-
-    public void removePlayer(String username) {
-        removeUser(username);
-        game.removePlayer(username);
-    }
-
     public void start() {
         game.start();
     }

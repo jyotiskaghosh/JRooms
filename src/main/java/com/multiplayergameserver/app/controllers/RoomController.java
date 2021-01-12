@@ -45,6 +45,8 @@ public class RoomController {
                 gameFactory,
                 playerFactory
             ));
+        GameRoom gameRoom = (GameRoom) rooms.get(roomId);
+        gameRoom.getGame().addPlayer(principal.getName());
         return roomId;
     }
 
@@ -65,9 +67,9 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{roomId}/players")
-    public Map<String, Player> getPlayers(@PathVariable String roomId) {
+    public Set<String> getPlayers(@PathVariable String roomId) {
         if (rooms.get(roomId) instanceof GameRoom)
-            return ((GameRoom) rooms.get(roomId)).getGame().getPlayers();
+            return ((GameRoom) rooms.get(roomId)).getGame().getPlayersInfo();
         return null;
     }
 
@@ -88,7 +90,7 @@ public class RoomController {
     public void addPlayer(@PathVariable String roomId, Principal principal) {
         if (rooms.get(roomId) instanceof GameRoom) {
             GameRoom gameRoom = (GameRoom) rooms.get(roomId);
-            gameRoom.addPlayer(principal.getName());
+            gameRoom.getGame().addPlayer(principal.getName());
         }
     }
 
@@ -96,8 +98,8 @@ public class RoomController {
     @PostMapping("/rooms/{roomId}/remove/player")
     public void removePlayer(@PathVariable String roomId, Principal principal) {
         if (rooms.get(roomId) instanceof GameRoom) {
-            GameRoom room = (GameRoom) rooms.get(roomId);
-            room.removePlayer(principal.getName());
+            GameRoom gameRoom = (GameRoom) rooms.get(roomId);
+            gameRoom.getGame().removePlayer(principal.getName());
         }
     }
 

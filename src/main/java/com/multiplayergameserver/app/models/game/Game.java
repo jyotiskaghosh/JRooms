@@ -1,6 +1,8 @@
 package com.multiplayergameserver.app.models.game;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.multiplayergameserver.app.models.messages.Action;
 import com.multiplayergameserver.app.models.rooms.GameRoom;
 import lombok.Getter;
@@ -15,6 +17,7 @@ public abstract class Game {
     @JsonIgnore
     private final GameRoom gameRoom;
     private boolean started;
+    @JsonIgnore
     private final Map<String, Player> players;
     @JsonIgnore
     private final PlayerFactory playerFactory;
@@ -33,6 +36,11 @@ public abstract class Game {
         players.remove(username);
         if (players.size() == 0)
             end();
+    }
+
+    @JsonProperty("players")
+    public Set<String> getPlayersInfo() {
+        return players.keySet();
     }
 
     public void start() { throw new UnsupportedOperationException(); }
