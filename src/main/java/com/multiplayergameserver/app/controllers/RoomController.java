@@ -1,12 +1,11 @@
 package com.multiplayergameserver.app.controllers;
 
 import com.multiplayergameserver.app.models.game.GameFactory;
-import com.multiplayergameserver.app.models.game.Player;
 import com.multiplayergameserver.app.models.game.PlayerFactory;
 import com.multiplayergameserver.app.models.messages.CreateGameMessage;
 import com.multiplayergameserver.app.models.messages.Message;
 import com.multiplayergameserver.app.models.rooms.GameRoom;
-import com.multiplayergameserver.app.models.rooms.Room;
+import com.multiplayergameserver.app.models.rooms.AbstractRoom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -29,7 +28,7 @@ public class RoomController {
     @Autowired
     private PlayerFactory playerFactory;
 
-    private final Map<String, Room> rooms = new HashMap<>();
+    private final Map<String, AbstractRoom> rooms = new HashMap<>();
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/new/game")

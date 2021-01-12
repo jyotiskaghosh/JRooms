@@ -1,11 +1,11 @@
 package com.multiplayergameserver.app.game;
 
-import com.multiplayergameserver.app.models.game.Game;
+import com.multiplayergameserver.app.models.game.AbstractGame;
 import com.multiplayergameserver.app.models.game.PlayerFactory;
 import com.multiplayergameserver.app.models.messages.WarnMessage;
 import com.multiplayergameserver.app.models.rooms.GameRoom;
 
-public class TestGame extends Game {
+public class TestGame extends AbstractGame {
 
     private static final int MAX_PLAYERS = 2;
 

@@ -1,6 +1,6 @@
 package com.multiplayergameserver.app.models.rooms;
 
-import com.multiplayergameserver.app.models.game.Game;
+import com.multiplayergameserver.app.models.game.AbstractGame;
 import com.multiplayergameserver.app.models.game.GameFactory;
 import com.multiplayergameserver.app.models.game.PlayerFactory;
 import com.multiplayergameserver.app.models.messages.Action;
@@ -11,10 +11,10 @@ import lombok.Getter;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @Getter
-public class GameRoom extends Room {
+public class GameRoom extends AbstractRoom {
 
     private final String host;
-    private final Game game;
+    private final AbstractGame game;
 
     public GameRoom(String roomId,
                     String title,

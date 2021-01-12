@@ -1,6 +1,5 @@
 package com.multiplayergameserver.app.models.game;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.multiplayergameserver.app.models.messages.Action;
@@ -12,17 +11,17 @@ import java.util.*;
 
 @Getter
 @Setter
-public abstract class Game {
+public abstract class AbstractGame {
 
     @JsonIgnore
     private final GameRoom gameRoom;
     private boolean started;
     @JsonIgnore
-    private final Map<String, Player> players;
+    private final Map<String, AbstractPlayer> players;
     @JsonIgnore
     private final PlayerFactory playerFactory;
 
-    public Game(GameRoom gameRoom, PlayerFactory playerFactory) {
+    public AbstractGame(GameRoom gameRoom, PlayerFactory playerFactory) {
         this.gameRoom = gameRoom;
         this.playerFactory = playerFactory;
         this.players = new HashMap<>();

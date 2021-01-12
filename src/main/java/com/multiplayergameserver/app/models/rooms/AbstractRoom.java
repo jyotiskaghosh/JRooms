@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-public abstract class Room {
+public abstract class AbstractRoom {
     private final String roomId;
     private final String title;
     private final Set<String> users;
@@ -17,7 +17,7 @@ public abstract class Room {
     @JsonIgnore
     private final SimpMessagingTemplate template;
 
-    Room(String roomId, String title, boolean active, SimpMessagingTemplate template) {
+    AbstractRoom(String roomId, String title, boolean active, SimpMessagingTemplate template) {
         this.roomId = roomId;
         this.title = title;
         this.active = active;
