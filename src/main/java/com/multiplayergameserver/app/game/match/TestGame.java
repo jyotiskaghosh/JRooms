@@ -1,4 +1,4 @@
-package com.multiplayergameserver.app.game;
+package com.multiplayergameserver.app.game.match;
 
 import com.multiplayergameserver.app.models.messages.Action;
 import com.multiplayergameserver.app.models.messages.WarnMessage;
@@ -35,11 +35,6 @@ public class TestGame implements Game, RoomGame {
     @Override
     public void removePlayer(String username) {
 
-    }
-
-    @Override
-    public Map<String, Player> getRoomPlayers() {
-        return this.players;
     }
 
     @Override

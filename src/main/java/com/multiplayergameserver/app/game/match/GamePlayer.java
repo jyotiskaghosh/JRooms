@@ -1,4 +1,4 @@
-package com.multiplayergameserver.app.game;
+package com.multiplayergameserver.app.game.match;
 
 import lombok.Getter;
 

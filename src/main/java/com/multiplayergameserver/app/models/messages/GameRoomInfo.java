@@ -1,6 +1,6 @@
 package com.multiplayergameserver.app.models.messages;
 
-import com.multiplayergameserver.app.game.Player;
+import com.multiplayergameserver.app.game.match.Player;
 import com.multiplayergameserver.app.models.rooms.GameRoom;
 import lombok.Getter;
 
@@ -34,6 +34,6 @@ public class GameRoomInfo {
         this.host = gameRoom.getHost();
         this.started = gameRoom.getGame().isStarted();
         this.players = new HashMap<>();
-        gameRoom.getGame().getRoomPlayers().forEach((s, roomPlayer) -> players.put(s, new PlayerInfo(roomPlayer)));
+        gameRoom.getGame().getPlayers().forEach((s, roomPlayer) -> players.put(s, new PlayerInfo(roomPlayer)));
     }
 }

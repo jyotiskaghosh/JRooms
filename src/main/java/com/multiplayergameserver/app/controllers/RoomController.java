@@ -107,7 +107,7 @@ public class RoomController {
             GameRoom gameRoom = (GameRoom) rooms.get(roomId);
             if (gameRoom
                     .getGame()
-                    .getRoomPlayers()
+                    .getPlayers()
                     .containsKey(principal.getName())
             )
                 gameRoom.getGame().start();
@@ -121,7 +121,7 @@ public class RoomController {
             GameRoom gameRoom = (GameRoom) rooms.get(roomId);
             if (gameRoom
                     .getGame()
-                    .getRoomPlayers()
+                    .getPlayers()
                     .containsKey(principal.getName())
             ) {
                 gameRoom.getGame().end();
