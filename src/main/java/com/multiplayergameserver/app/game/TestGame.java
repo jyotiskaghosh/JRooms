@@ -1,25 +1,59 @@
 package com.multiplayergameserver.app.game;
 
-import com.multiplayergameserver.app.models.game.AbstractGame;
-import com.multiplayergameserver.app.models.game.PlayerFactory;
+import com.multiplayergameserver.app.models.messages.Action;
 import com.multiplayergameserver.app.models.messages.WarnMessage;
 import com.multiplayergameserver.app.models.rooms.GameRoom;
+import com.multiplayergameserver.app.models.rooms.RoomGame;
+import lombok.Data;
 
-public class TestGame extends AbstractGame {
+import java.util.HashMap;
+import java.util.Map;
+
+@Data
+public class TestGame implements Game, RoomGame {
 
     private static final int MAX_PLAYERS = 2;
+    private final GameRoom gameRoom;
+    private final Map<String, Player> players;
+    private boolean started;
 
-    public TestGame(GameRoom gameRoom, PlayerFactory playerFactory) {
-        super(gameRoom, playerFactory);
+    public TestGame(GameRoom gameRoom) {
+        this.gameRoom = gameRoom;
+        this.players = new HashMap<>();
+    }
+
+    public void addPlayer(String username) {
+        if (players.size() >= MAX_PLAYERS)
+        {
+            this.getGameRoom().sendUser(username, new WarnMessage("game at maximum player capacity"));
+            return;
+        }
+        players.put(username, new GamePlayer(username));
+
     }
 
     @Override
-    public void addPlayer(String username) {
-        if (super.getPlayers().size() >= MAX_PLAYERS)
-        {
-            super.getGameRoom().sendUser(username, new WarnMessage("game at maximum player capacity"));
-            return;
-        }
-        super.getPlayers().put(username, super.getPlayerFactory().createPlayer(username));
+    public void removePlayer(String username) {
+
+    }
+
+    @Override
+    public Map<String, Player> getRoomPlayers() {
+        return this.players;
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void process(String username, Action action) {
+
+    }
+
+    @Override
+    public void end() {
+
     }
 }

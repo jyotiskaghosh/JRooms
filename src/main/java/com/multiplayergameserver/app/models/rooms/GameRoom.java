@@ -1,8 +1,7 @@
 package com.multiplayergameserver.app.models.rooms;
 
-import com.multiplayergameserver.app.models.game.AbstractGame;
-import com.multiplayergameserver.app.models.game.GameFactory;
-import com.multiplayergameserver.app.models.game.PlayerFactory;
+import com.multiplayergameserver.app.models.messages.GameRoomInfo;
+import com.multiplayergameserver.app.repositories.GameFactory;
 import com.multiplayergameserver.app.models.messages.Action;
 import com.multiplayergameserver.app.models.messages.Message;
 
@@ -14,26 +13,22 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 public class GameRoom extends AbstractRoom {
 
     private final String host;
-    private final AbstractGame game;
+    private final RoomGame game;
 
     public GameRoom(String roomId,
                     String title,
                     boolean active,
                     String host,
                     SimpMessagingTemplate template,
-                    GameFactory gameFactory,
-                    PlayerFactory playerFactory) {
+                    GameFactory gameFactory
+    ) {
         super(roomId, title, active, template);
         this.host = host;
-        this.game = gameFactory.createGame(this, playerFactory);
+        this.game = gameFactory.createGame(this);
     }
 
-    public void start() {
-        game.start();
-    }
-
-    public void end() {
-        game.end();
+    public GameRoomInfo getGameRoomInfo() {
+        return new GameRoomInfo(this);
     }
 
     @Override
