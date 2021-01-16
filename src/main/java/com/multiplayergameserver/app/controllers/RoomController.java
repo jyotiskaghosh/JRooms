@@ -64,7 +64,7 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{roomId}/players")
-    public Map<String, GameRoomInfo.PlayerInfo> getPlayers(@PathVariable String roomId) {
+    public Set<String> getPlayers(@PathVariable String roomId) {
         if (rooms.get(roomId) instanceof GameRoom)
             return ((GameRoom) rooms.get(roomId)).getGameRoomInfo().getPlayers();
         return null;
