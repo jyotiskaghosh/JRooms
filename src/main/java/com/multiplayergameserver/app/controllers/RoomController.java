@@ -106,9 +106,9 @@ public class RoomController {
         if (rooms.get(roomId) instanceof GameRoom) {
             GameRoom gameRoom = (GameRoom) rooms.get(roomId);
             if (gameRoom
-                    .getGame()
+                    .getGameRoomInfo()
                     .getPlayers()
-                    .containsKey(principal.getName())
+                    .contains(principal.getName())
             )
                 gameRoom.getGame().start();
         }
@@ -120,9 +120,9 @@ public class RoomController {
         if (rooms.get(roomId) instanceof GameRoom) {
             GameRoom gameRoom = (GameRoom) rooms.get(roomId);
             if (gameRoom
-                    .getGame()
+                    .getGameRoomInfo()
                     .getPlayers()
-                    .containsKey(principal.getName())
+                    .contains(principal.getName())
             ) {
                 gameRoom.getGame().end();
                 rooms.remove(roomId);

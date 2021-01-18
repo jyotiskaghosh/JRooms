@@ -1,9 +1,11 @@
 package com.multiplayergameserver.app.models.messages;
 
+import com.multiplayergameserver.app.game.match.Player;
 import com.multiplayergameserver.app.models.rooms.GameRoom;
 import lombok.Getter;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 public class GameRoomInfo {
@@ -22,6 +24,6 @@ public class GameRoomInfo {
         this.active = gameRoom.isActive();
         this.host = gameRoom.getHost();
         this.started = gameRoom.getGame().isStarted();
-        this.players = gameRoom.getGame().getPlayers().keySet();
+        this.players = gameRoom.getGame().getPlayers().stream().map(Player::getUsername).collect(Collectors.toSet());
     }
 }
