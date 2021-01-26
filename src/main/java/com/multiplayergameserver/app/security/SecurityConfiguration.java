@@ -1,33 +1,45 @@
 package com.multiplayergameserver.app.security;
 
+import com.multiplayergameserver.app.models.AppUserDetails;
+import com.multiplayergameserver.app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import reactor.core.publisher.Mono;
 
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
+public class SecurityConfiguration {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserRepository userRepository;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+    @Bean
+    public ReactiveUserDetailsService userDetailsService() {
+        return new ReactiveUserDetailsService() {
+            @Override
+            public Mono<UserDetails> findByUsername(String username) {
+                return userRepository.findByUsername(username).map(AppUserDetails::new);
+            }
+        };
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.httpBasic();
-        http.authorizeRequests().anyRequest().permitAll();
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        return http
+                .csrf().disable()
+                .authorizeExchange()
+                .anyExchange().permitAll()
+                .and()
+                .httpBasic().and()
+                .build();
     }
 
     @Bean

@@ -1,10 +1,9 @@
 package com.multiplayergameserver.app.repositories;
 
-import com.multiplayergameserver.app.game.models.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import com.multiplayergameserver.app.models.User;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-
-public interface UserRepository extends MongoRepository<User, String> {
-    Optional<User> findByUsername(String username);
+public interface UserRepository extends ReactiveMongoRepository<User, String> {
+    Mono<User> findByUsername(String username);
 }

@@ -1,43 +1,30 @@
 package com.multiplayergameserver.app.models.rooms;
 
 import com.multiplayergameserver.app.models.messages.Message;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import lombok.Setter;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
+import org.springframework.messaging.rsocket.RSocketRequester;
+import reactor.core.Disposable;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-public abstract class AbstractRoom {
-    private final String roomId;
-    private final String title;
-    private final Set<String> users;
-    private boolean active;
-    private final SimpMessagingTemplate template;
+@Data
+public abstract class AbstractRoom implements Publisher<Message>, Disposable {
+    protected final String roomId;
+    protected final String title;
+    protected boolean active = true;
+    protected boolean disposed = false;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    protected final Set<Subscriber<? super Message>> subscribers = new HashSet<>();
 
-    AbstractRoom(String roomId, String title, boolean active, SimpMessagingTemplate template) {
-        this.roomId = roomId;
-        this.title = title;
-        this.active = active;
-        this.template = template;
-        this.users = new HashSet<>();
+    public void process(String username, RSocketRequester requester, Message message) {
+        throw new UnsupportedOperationException();
     }
-
-    public void send(Message message) {
-        this.template.convertAndSend("/topic/rooms/" + roomId, message);
-    }
-
-    public void sendUser(String username, Message message) {
-        this.template.convertAndSend("/topic/rooms/" + roomId + "/" + username, message);
-    }
-
-    public void addUser(String username) {
-        users.add(username);
-    }
-
-    public void removeUser(String username) {
-        users.remove(username);
-    }
-
-    public void process(String username, Message message) { throw new UnsupportedOperationException(); }
+    public void broadcastAll(Message message) { throw new UnsupportedOperationException(); }
 }

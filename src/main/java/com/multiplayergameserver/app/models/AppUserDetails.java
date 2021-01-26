@@ -1,6 +1,5 @@
 package com.multiplayergameserver.app.models;
 
-import com.multiplayergameserver.app.game.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

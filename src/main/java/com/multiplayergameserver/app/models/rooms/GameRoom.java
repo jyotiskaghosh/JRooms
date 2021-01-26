@@ -1,42 +1,68 @@
 package com.multiplayergameserver.app.models.rooms;
 
-import com.multiplayergameserver.app.models.messages.GameRoomInfo;
-import com.multiplayergameserver.app.repositories.GameFactory;
-import com.multiplayergameserver.app.models.messages.Action;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.multiplayergameserver.app.game.GameFactory;
+
+import com.multiplayergameserver.app.models.messages.GameMessage;
 import com.multiplayergameserver.app.models.messages.Message;
-
-import com.multiplayergameserver.app.models.messages.WarnMessage;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import lombok.extern.slf4j.Slf4j;
+import org.reactivestreams.Subscriber;
+import org.springframework.messaging.rsocket.RSocketRequester;
 
+import java.util.Set;
+
+@Slf4j
 @Getter
 public class GameRoom extends AbstractRoom {
 
     private final String host;
+    @JsonIgnore
     private final RoomGame game;
+
+    @AllArgsConstructor
+    @Getter
+    private static class GameInfo {
+        boolean started;
+        Set<String> players;
+    }
 
     public GameRoom(String roomId,
                     String title,
-                    boolean active,
                     String host,
-                    SimpMessagingTemplate template,
                     GameFactory gameFactory
     ) {
-        super(roomId, title, active, template);
+        super(roomId, title);
         this.host = host;
         this.game = gameFactory.createGame(this);
+        log.info("new room with roomId {} created.", roomId);
     }
 
-    public GameRoomInfo getGameRoomInfo() {
-        return new GameRoomInfo(this);
+    public GameInfo getGameInfo() {
+        return new GameInfo(active, game.getPlayerNames());
     }
 
     @Override
-    public void process(String username, Message message) {
+    public void subscribe(Subscriber<? super Message> subscriber) {
+        subscribers.add(subscriber);
+    }
 
-        if (message instanceof Action)
-            game.process(username, (Action) message);
-        else
-            sendUser(username, new WarnMessage("warning"));
+    @Override
+    public void process(String username, RSocketRequester requester, Message message) {
+        if (message instanceof GameMessage)
+            game.process(username, requester, (GameMessage) message);
+    }
+
+    @Override
+    public void broadcastAll(Message message) {
+        subscribers.forEach(subscriber -> subscriber.onNext(message));
+    }
+
+    @Override
+    public void dispose() {
+        subscribers.forEach(Subscriber::onComplete);
+        disposed = true;
+        log.info("deleted room with roomId {}.", roomId);
     }
 }

@@ -1,4 +1,4 @@
-package com.multiplayergameserver.app.game.models;
+package com.multiplayergameserver.app.models;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -28,7 +28,7 @@ public class User {
     @Size(min=5, message="password must be at least 5 characters long")
     private String password;
 
-    private boolean active;
+    private boolean active = true;
 
     private Set<String> roles;
 }
