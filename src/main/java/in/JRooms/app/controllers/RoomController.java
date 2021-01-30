@@ -51,7 +51,7 @@ public class RoomController {
 
     @PreAuthorize("hasAuthority('USER')")
     @MessageMapping("rooms.{roomId}")
-    public Flux<Message> processGame(@DestinationVariable String roomId,
+    public Flux<Message> process(@DestinationVariable String roomId,
                                      Flux<Message> messages,
                                      Principal principal,
                                      RSocketRequester requester) {
