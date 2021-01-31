@@ -1,7 +1,6 @@
 package in.JRooms.app.models.rooms;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import in.JRooms.app.game.GameFactory;
 import in.JRooms.app.models.messages.Message;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +29,7 @@ public class GameRoom extends AbstractRoom {
     public GameRoom(String roomId,
                     String title,
                     String host,
-                    GameFactory gameFactory
+                    RoomGameFactory gameFactory
     ) {
         super(roomId, title);
         this.host = host;

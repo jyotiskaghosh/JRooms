@@ -1,6 +1,6 @@
 package in.JRooms.app.controllers;
 
-import in.JRooms.app.game.GameFactory;
+import in.JRooms.app.models.rooms.RoomGameFactory;
 import in.JRooms.app.models.CreateGameMessage;
 import in.JRooms.app.models.messages.Message;
 import in.JRooms.app.models.rooms.GameRoom;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class RoomController {
 
     @Autowired
-    private GameFactory gameFactory;
+    private RoomGameFactory gameFactory;
 
     private final Set<AbstractRoom> rooms = new HashSet<>();
 
