@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.rsocket.RSocketRequester;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,13 +26,25 @@ public class RoomController {
     @Autowired
     private RoomGameFactory gameFactory;
 
-    private final Set<AbstractRoom> rooms = new HashSet<>();
+    private final Map<String, AbstractRoom> rooms = new ConcurrentHashMap<>();
+
+    // clean up disposed rooms every 1 min
+    @Scheduled(fixedRate = 60000)
+    public void cleanRooms() {
+        rooms.forEach((id, room) -> {
+            if (!room.isActive()) {
+                room.dispose();
+                rooms.remove(id);
+            }
+        });
+    }
 
     @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/new/game")
     public Mono<String> newGame(@RequestBody CreateGameMessage message, Principal principal) {
         String roomId = UUID.randomUUID().toString();
-        rooms.add(new GameRoom(
+        rooms.put(roomId,
+                new GameRoom(
                 roomId,
                 message.getTitle(),
                 principal.getName(),
@@ -41,7 +55,7 @@ public class RoomController {
     @GetMapping("/rooms/games")
     public Map.Entry<String, List<GameRoom>> getGames() {
         return Map.entry("games",
-                rooms
+                rooms.values()
                 .stream()
                 .filter(room -> room instanceof GameRoom)
                 .map(room -> (GameRoom) room)
@@ -55,11 +69,7 @@ public class RoomController {
                                      Flux<Message> messages,
                                      Principal principal,
                                      RSocketRequester requester) {
-        AbstractRoom room = rooms
-                .stream()
-                .filter(r -> r.getRoomId().equals(roomId))
-                .findAny()
-                .orElseThrow();
+        AbstractRoom room = rooms.get(roomId);
         messages.subscribe(message -> room.process(principal.getName(), requester, message));
         return Flux.from(room);
     }

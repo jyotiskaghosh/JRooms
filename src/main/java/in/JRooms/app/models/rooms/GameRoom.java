@@ -59,7 +59,6 @@ public class GameRoom extends AbstractRoom {
     @Override
     public void dispose() {
         subscribers.forEach(Subscriber::onComplete);
-        disposed = true;
-        log.info("deleted room with roomId {}.", roomId);
+        log.info("disposed room with roomId {}.", roomId);
     }
 }
