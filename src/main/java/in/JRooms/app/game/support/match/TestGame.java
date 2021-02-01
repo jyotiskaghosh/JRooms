@@ -12,7 +12,7 @@ import java.util.Set;
 public class TestGame implements RoomGame {
 
     private final GameRoom gameRoom;
-    private boolean started = false;
+    private boolean started;
 
     @Override
     public Set<String> getPlayerNames() {

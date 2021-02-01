@@ -17,7 +17,7 @@ import java.util.Set;
 public abstract class AbstractRoom implements Publisher<Message>, Disposable {
     protected final String roomId;
     protected final String title;
-    protected boolean disposed = false;
+    protected boolean disposed;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     protected final Set<Subscriber<? super Message>> subscribers = new HashSet<>();
