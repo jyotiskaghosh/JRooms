@@ -28,7 +28,7 @@ public class RoomController {
 
     private final Map<String, AbstractRoom> rooms = new ConcurrentHashMap<>();
 
-    // clean up disposed rooms every 1 min
+    // dispose inactive rooms every 1 min
     @Scheduled(fixedRate = 60000)
     public void cleanRooms() {
         rooms.forEach((id, room) -> {
