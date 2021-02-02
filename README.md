@@ -1,2 +1,2 @@
-# JRooms-non-reactive
-is a non reactive lightweight rooms(gameroom, chatrooms etc) implimentation.
+# JRooms
+is a lightweight framework/codebase for temporary rooms(gameroom, chatrooms etc).
