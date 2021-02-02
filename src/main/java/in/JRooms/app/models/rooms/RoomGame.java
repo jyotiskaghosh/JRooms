@@ -1,6 +1,5 @@
 package in.JRooms.app.models.rooms;
 
-
 import in.JRooms.app.models.messages.Message;
 
 import java.util.Set;

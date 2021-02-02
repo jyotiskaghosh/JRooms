@@ -1,8 +1,8 @@
 package in.JRooms.app.models.rooms;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import in.JRooms.app.models.messages.Message;
 
+import in.JRooms.app.models.messages.Message;
 import lombok.Getter;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
