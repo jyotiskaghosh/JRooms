@@ -37,11 +37,6 @@ public class GameRoom extends AbstractRoom {
         log.info("new room with roomId {} created.", roomId);
     }
 
-    @Override
-    public void subscribe(Subscriber<? super Message> subscriber) {
-        subscribers.add(subscriber);
-    }
-
     public GameInfo getGameInfo() {
         return new GameInfo(game.isStarted(), game.getPlayerNames());
     }
@@ -59,6 +54,6 @@ public class GameRoom extends AbstractRoom {
     @Override
     public void dispose() {
         subscribers.forEach(Subscriber::onComplete);
-        log.info("disposed room with roomId {}.", roomId);
+        log.info("disposed room with roomId: " + roomId);
     }
 }

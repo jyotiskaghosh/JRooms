@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ChatMessage implements Message {
-    private String sender = "";
-    private final String body;
+    private String sender;
+    private String body;
 }

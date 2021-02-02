@@ -22,6 +22,10 @@ public abstract class AbstractRoom implements Publisher<Message>, Disposable {
     @Setter(AccessLevel.NONE)
     protected final Set<Subscriber<? super Message>> subscribers = new HashSet<>();
 
+    public void subscribe(Subscriber<? super Message> subscriber) {
+        subscribers.add(subscriber);
+    }
+
     public void process(String username, RSocketRequester requester, Message message) {
         throw new UnsupportedOperationException();
     }
