@@ -1,10 +1,10 @@
 package in.JRooms.app.controllers;
 
 import in.JRooms.app.models.rooms.RoomGameFactory;
-import in.JRooms.app.models.CreateGameMessage;
 import in.JRooms.app.models.messages.Message;
 import in.JRooms.app.models.rooms.GameRoom;
 import in.JRooms.app.models.rooms.AbstractRoom;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -37,6 +37,11 @@ public class RoomController {
                 rooms.remove(id);
             }
         });
+    }
+
+    @Getter
+    private static class CreateGameMessage {
+        private String title;
     }
 
     @PreAuthorize("hasAuthority('USER')")

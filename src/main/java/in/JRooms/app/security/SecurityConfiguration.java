@@ -1,6 +1,5 @@
 package in.JRooms.app.security;
 
-import in.JRooms.app.models.AppUserDetails;
 import in.JRooms.app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
