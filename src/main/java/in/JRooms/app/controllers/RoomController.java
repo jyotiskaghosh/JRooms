@@ -1,10 +1,10 @@
 package in.JRooms.app.controllers;
 
-import in.JRooms.app.models.CreateGameMessage;
 import in.JRooms.app.models.messages.Message;
 import in.JRooms.app.models.rooms.RoomGameFactory;
 import in.JRooms.app.models.rooms.GameRoom;
 import in.JRooms.app.models.rooms.AbstractRoom;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -40,6 +40,11 @@ public class RoomController {
                 log.info("deleted inactive room with roomId: " + id);
             }
         } );
+    }
+
+    @Getter
+    private static class CreateGameMessage {
+        private String title;
     }
 
     @PreAuthorize("hasAuthority('USER')")

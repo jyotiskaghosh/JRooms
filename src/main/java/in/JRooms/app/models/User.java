@@ -29,8 +29,8 @@ public class User {
     private boolean active = true;
 
     private Role role;
-}
 
-enum Role {
-    USER
+    public enum Role {
+        USER
+    }
 }

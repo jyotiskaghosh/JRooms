@@ -17,14 +17,13 @@ public abstract class AbstractRoom {
     protected final Set<String> users = new HashSet<>();
     protected boolean active = true;
     @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
     protected final SimpMessagingTemplate template;
 
     public void broadcast(Message message) {
         this.template.convertAndSend("/topic/rooms/" + roomId, message);
     }
 
-    public void sendUser(String username, Message message) {
+    public void sendToUser(String username, Message message) {
         this.template.convertAndSendToUser(username, "/topic/rooms/" + roomId, message);
     }
 

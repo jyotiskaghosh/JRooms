@@ -1,5 +1,6 @@
-package in.JRooms.app.models;
+package in.JRooms.app.security;
 
+import in.JRooms.app.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 
-public class AppUserDetails implements UserDetails {
+class AppUserDetails implements UserDetails {
 
     private String username;
     private String password;

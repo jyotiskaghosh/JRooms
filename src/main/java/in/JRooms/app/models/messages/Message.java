@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = ChatMessage.class),
-        @JsonSubTypes.Type(value = ServerMessage.class)
+        @JsonSubTypes.Type(value = ChatMessage.class)
 })
 public interface Message {
 }
