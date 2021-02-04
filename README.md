@@ -1,2 +1,2 @@
 # JRooms
-is a lightweight framework/codebase for temporary rooms(gameroom, chatrooms etc).
+is a lightweight codebase for implementing temporary rooms(gameroom, chatrooms etc).
