@@ -1,2 +1,2 @@
 # JRooms
-JRooms is a lightweight reactive framework/codebase for creating temporary rooms(chatrooms, gamerooms etc).
+JRooms is a lightweight reactive codebase for implementing temporary rooms(chatrooms, gamerooms etc).
